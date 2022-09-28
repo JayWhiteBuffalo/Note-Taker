@@ -8,6 +8,8 @@ const path = require('path');
 app.use(express.urlencoded({ extended: true}));
 //parse incoming JSON data
 app.use(express.json());
+app.use(express.static('public'));
+
 
 const notes = require('./db/db.json');
 
@@ -49,6 +51,20 @@ app.post('/api/notes', (req, res) => {
     console.log(note)
     res.json(note);
     }
+});
+//gets index html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+//gets notes html
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+
+//wild care route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 
