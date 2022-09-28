@@ -3,7 +3,8 @@ const express = require('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
 const path = require('path');
-
+//this allows use of npm uuid package which I found through StackOverflow
+const { v1: uuidv1, v4: uuidv4 } = require('uuid');
 //parse incoming string or array data
 app.use(express.urlencoded({ extended: true}));
 //parse incoming JSON data
@@ -15,13 +16,14 @@ const notes = require('./db/db.json');
 
 //Creates, adds to noteArr, writes to database in JSON format, returns note
 function createNote(body, noteArr){
-    console.log(body);
-    const note = body
-    noteArr.push(note);
+    const newNote = body
+    newNote.id = uuidv1();
+    noteArr.push(newNote);
     fs.writeFileSync(
         path.join(__dirname, './db/db.json'),
         JSON.stringify(noteArr)
     );
+    console.log(noteArr[1])
     return noteArr;
 }
 
@@ -62,7 +64,7 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
-//wild care route
+//wild card route
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
