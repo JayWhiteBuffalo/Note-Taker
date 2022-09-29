@@ -38,6 +38,18 @@ function validateNote(note){
     return true;
 }
 
+//DeleteNote
+function deleteNote(notesArr, id) {
+    //for loop (Runs through noteArr by increment counter)
+    for (let i = 0; i < notesArr.length; i++) {
+
+        if (notesArr[i].id == id) {
+            noteArr.splice(i, 1);
+            break;
+        }
+    }
+}
+
 //This will return notes in database in JSON format
 app.get('/api/notes', (req,res) => {
     
@@ -68,6 +80,13 @@ app.get('/notes', (req, res) => {
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
+
+// delete 
+app.delete("/api/notes/:id", (req, res) => {
+    deleteNote(notes, req.params.id);
+    res.json(notes);
+    }
+  );
 
 
 app.listen(PORT, () => {
